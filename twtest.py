@@ -1,6 +1,8 @@
 import urllib.request, urllib.parse, urllib.error
 from twurl import augment
+import json
 import ssl
+import pprint
 
 # https://apps.twitter.com/
 # Create App and get the four strings, put them in hidden.py
@@ -16,9 +18,15 @@ ctx.check_hostname = False
 ctx.verify_mode = ssl.CERT_NONE
 
 connection = urllib.request.urlopen(url, context=ctx)
-data = connection.read()
-print(data)
+data = connection.read().decode()
+js_data = json.loads(data)
+print(json.dumps(js_data, indent=4))
 
-print ('======================================')
-headers = dict(connection.getheaders())
-print(headers)
+profile_name = js_data[0]['user']['name']
+followers = js_data[0]['user']['followers_count']
+print('profile_name', profile_name, 'followers', followers)
+
+# print ('======================================')
+# headers = dict(connection.getheaders())
+# pp = pprint.PrettyPrinter(indent=4)
+# pp.pprint(headers)
